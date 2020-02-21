@@ -1,0 +1,180 @@
+
+import os, fnmatch
+import pandas as pd
+from openpyxl import load_workbook
+import numpy as np
+
+##np.zeros((2, 3)) array([[ 0., 0., 0.], [ 0., 0., 0.]])
+
+# Open function to open the file "MyFile1.txt"  
+# (same directory) in append mode and 
+fbe_files = fnmatch.filter(sorted(os.listdir("./FBE LSU EXP1/")), '*.fbe')
+
+dcol1 = []
+dcol2 = []
+dcol3 = []
+dcol4 = []
+dcol5 = []
+dcol6 = []
+dcol7 = []
+dcol8 = []
+
+output_data1 = np.zeros((611,len(fbe_files)))
+output_data2 = np.zeros((611,len(fbe_files)))
+output_data3 = np.zeros((611,len(fbe_files)))
+output_data4 = np.zeros((611,len(fbe_files)))
+output_data5 = np.zeros((611,len(fbe_files)))
+output_data6 = np.zeros((611,len(fbe_files)))
+output_data7 = np.zeros((611,len(fbe_files)))
+output_data8 = np.zeros((611,len(fbe_files)))
+
+file_number = 0
+for file_name in fbe_files:
+ 
+    
+   f = open("./FBE LSU EXP1/"+file_name, "r")
+   print(file_name)
+
+   for x in f:
+     
+     if "data id=" in x:
+      
+        t = x.split(',')
+        
+        depth = t[0]
+        depth = depth[t[0].find('>')+1:]
+        
+        if float(depth)<0:
+           continue
+        
+        dcol1.append(t[1])
+        dcol2.append(t[2])
+        dcol3.append(t[3])
+        dcol4.append(t[4])
+        dcol5.append(t[5])
+        dcol6.append(t[6])
+        dcol7.append(t[7])
+     
+        tt = t[8].split('<')
+        dcol8.append(tt[0])
+        
+     if "</logData>" in x:
+        del dcol1[-1]
+        del dcol2[-1]
+        del dcol3[-1]
+        del dcol4[-1]
+        del dcol5[-1]
+        del dcol6[-1]
+        del dcol7[-1]
+        del dcol8[-1]
+    
+    
+   for i in range(len(dcol1)): 
+      output_data1[i,file_number] = dcol1[i]
+      
+     
+   for i in range(len(dcol2)):
+      output_data2[i,file_number] = dcol2[i]
+      
+     
+   for i in range(len(dcol3)):
+      output_data3[i,file_number] = dcol3[i]
+      
+     
+   for i in range(len(dcol4)):
+      output_data4[i,file_number] = dcol4[i]
+      
+     
+   for i in range(len(dcol5)):
+      output_data5[i,file_number] = dcol5[i]
+      
+      
+   for i in range(len(dcol6)):
+      output_data6[i,file_number] = dcol6[i]
+      
+     
+   for i in range(len(dcol7)):
+      output_data7[i,file_number] = dcol7[i]   
+        
+      
+   for i in range(len(dcol8)):
+      output_data8[i,file_number] = dcol8[i]     
+        
+   dcol1=[]
+   dcol2=[]
+   dcol3=[]
+   dcol4=[]
+   dcol5=[]
+   dcol6=[]
+   dcol7=[]
+   dcol8=[]
+   
+   file_number = file_number + 1
+     
+   ## END FOR file_name
+
+#File 1   
+output_file = "./FBE LSU EXP1/"+"SF00-5000" +'.xlsx'
+output_df = pd.DataFrame(output_data1) 
+writer = pd.ExcelWriter(output_file)
+output_df.to_excel(writer)       
+writer.save()
+writer.close()
+
+#File 2   
+output_file = "./FBE LSU EXP1/"+"SF02-10" +'.xlsx'     
+output_df = pd.DataFrame(output_data2)
+writer = pd.ExcelWriter(output_file)
+output_df.to_excel(writer)       
+writer.save()
+writer.close()
+
+#File 3   
+output_file = "./FBE LSU EXP1/"+"SF10-50" +'.xlsx'     
+output_df = pd.DataFrame(output_data3)
+writer = pd.ExcelWriter(output_file)
+output_df.to_excel(writer)       
+writer.save()
+writer.close()
+
+#File 4   
+output_file = "./FBE LSU EXP1/"+"SF50-200" +'.xlsx'     
+output_df = pd.DataFrame(output_data4)
+writer = pd.ExcelWriter(output_file)
+output_df.to_excel(writer)       
+writer.save()
+writer.close()
+
+#File 5   
+output_file = "./FBE LSU EXP1/"+"SF200-500" +'.xlsx'     
+output_df = pd.DataFrame(output_data5)
+writer = pd.ExcelWriter(output_file)
+output_df.to_excel(writer)       
+writer.save()
+writer.close() 
+
+#File 6   
+output_file = "./FBE LSU EXP1/"+"SF500-1000" +'.xlsx'     
+output_df = pd.DataFrame(output_data6)
+writer = pd.ExcelWriter(output_file)
+output_df.to_excel(writer)       
+writer.save()
+writer.close() 
+
+#File 7   
+output_file = "./FBE LSU EXP1/"+"SF1000-2500" +'.xlsx'     
+output_df = pd.DataFrame(output_data7)
+writer = pd.ExcelWriter(output_file)
+output_df.to_excel(writer)       
+writer.save()
+writer.close() 
+
+#File 8   
+output_file = "./FBE LSU EXP1/"+"SF2500-5000" +'.xlsx'     
+output_df = pd.DataFrame(output_data8)
+writer = pd.ExcelWriter(output_file)
+output_df.to_excel(writer)       
+writer.save()
+writer.close() 
+
+## END FOR fbe_files   
